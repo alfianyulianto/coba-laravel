@@ -1,0 +1,140 @@
+# Routes - Basic Routing
+Route::get('/greeting', function () {
+    return 'Hello World';
+});
+
+# Routes - The Default Route Files
+use App\Http\Controlle\UserController;
+Route::get('/user', [UserController::class, 'index']);
+
+# Routes - Available Router Methods
+Route::get($uri, $callback);
+Route::post($uri, $callback);
+Route::put($uri, $callback);
+Route::patch($uri, $callback);
+Route::delete($uri, $callback);
+Route::options($uri, $callback);
+Terkadang kita membutuhkan untuk multiple registrasi HTTP Verbs kita bisa gunakan 'match'. Kita juga terkadang membutuhkan registrasi semua HTTP Verbs kita bisa gunakan 'any'
+Route::match(['get', 'post'], '/', function () {
+    //
+});
+Route::any('/', function () {
+    //
+});
+
+#Routes - Redirect Routes
+Route::redirect('/here', '/there');
+Route::redirect('/here', '/there', 301);
+Route::permanentRedirect('/here', '/there');
+
+#Routes - View Routes
+Route::view('/welcome', 'welcome');
+Route::view('/welcome', 'welcome', ['name' => 'Taylor']);
+
+#Routes - Required Parameter
+Terkadang kita ingin melihat tampilan dari sebuah segement yang ada di URI misal seperti ID maka kita bisa mendefinisikannya seperti dibawah ini
+Route::get('/user/{id}', function ($id) {
+    return 'User '.$id;
+});
+Route::get('/posts/{post}/comments/{comment}', function ($postId, $commentId) {
+    //
+});
+
+#Routes - Dependency Injection
+use Illuminate\Http\Request;
+Route::get('/user/{id}', function (Request $request, $id) {
+    return 'User '.$id;
+});
+
+#Routes - Optional Parameeter
+Route::get('/user/{name?}', function ($name = null) {
+    return $name;
+});
+Route::get('/user/{name?}', function ($name = 'John') {
+    return $name;
+});
+
+# Routes - Route Model Binding - Implicit Binding
+Laravel secara otomatis menyelesaikan model Eloquent yang ditentukan dalam tindakan route atau penjaluran yang nama variabelnya sesuai dengan nama segmen rute. Sebagai contoh:
+use App\Models\User;
+Route::get('/users/{user}', function (User $user) {
+    return $user->email;
+});
+
+# Routes - Route Model Binding - Customizing The Key
+Terkadang Anda mungkin ingin menyelesaikan model Eloquent menggunakan kolom selain ID. Untuk melakukannya, Anda dapat menentukan kolom dalam definisi parameter rute:
+use App\Models\Post;
+Route::get('/posts/{post:slug}', function (Post $post) {
+    return $post;
+});
+Jika Anda ingin pengikatan model untuk selalu menggunakan kolom database selain id saat mengambil kelas model tertentu, Anda dapat mengganti metode getRouteKeyName pada model Eloquent:
+public function getRouteKeyName()
+{
+    return 'slug';
+}
+
+# Routes - Route Model Binding - Custom Keys & Scoping
+use App\Models\Post;
+use App\Models\User;
+Route::get('/users/{user}/posts/{post:slug}', function (User $user, Post $post) {
+    return $post;
+});
+Jika Anda ingin pengikatan model untuk selalu menggunakan kolom database selain id saat mengambil kelas model tertentu, Anda dapat mengganti metode getRouteKeyName pada model Eloquent:
+public function getRouteKeyName()
+{
+    return 'slug';
+}
+
+
+- CSRF (Cross-site request forgeries)
+<form method="POST" action="/profile">
+    @csrf
+    <!-- Equivalent to... -->
+    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+</form>
+
+- Eloquent ORM Insert
+public function store(Request $request)
+{
+    // Validate the request...
+    $flight = new Flight;
+    $flight->name = $request->name;
+    $flight->save();
+}
+Sebelum kita menggunakan method create, kita membutuhkan salah satu properti "fillable" or "guarded" di dalam class mode. Properti ini diperlukan karena semua model Eloquent dilindungi dari kerentanan penugasan massal secara default. Properti "$fillable" artinya kolom apa saja ang boleh di isi sedangkan "$guarded" artinya kolom apa yang tidak boleh di isi dengan create
+use App\Models\Flight;
+$flight = Flight::create([
+    'name' => 'London to Paris',
+]);
+
+- Validation - Writing The Validation Logic
+public function store(Request $request)
+{
+    $validated = $request->validate([
+        'title' => 'required|unique:posts|max:255',
+        'body' => 'required',
+    ]);
+    // The blog post is valid...
+}
+
+- Displaying The Validation Errors
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+- The @error Directive
+<label for="title">Post Title</label>
+<input id="title" type="text" name="title" class="@error('title') is-invalid @enderror">
+@error('title')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
+
+- Repopulating Forms
+$title = $request->old('title');
+<input type="text" name="title" value="{{ old('title') }}">

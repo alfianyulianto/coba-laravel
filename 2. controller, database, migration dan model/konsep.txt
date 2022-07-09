@@ -1,0 +1,136 @@
+Artisan
+- php artisan list : untuk meliat command artisan ang tersedia
+- php artisan help "migrate/controller/dll" : untuk melihat layar bantuan, awali dengan "help"
+
+Artsan for controller
+- php artisan make: controller NameControler  (untuk membuat controller)
+- php artisan make: controller NameControler --resource  (untuk membuat controller dengan method-method default di dalamnnya untuk mengelola data )
+
+
+Database: Query Builder (Result Conllection : sebuah Array of Object pada Laravel)(CRUD)
+use Illuminate\Support\Facades\DB;
+- DB::table('user')->get()  : mengambil semua data user  
+- DB::tabel('user')->where('name', 'jhon')->first()  : mengambil data pertama dari user dengan nama nama jhon
+- DB::table('user')->where('name', 'jhon')->value('email')  : mengambil data email dari user yang bernama jhon
+- DB::table('user')->find(3)  : mengambil data user berdasarkan id 3
+- DB::table('user')->orderBy('id', ASC)
+- DB::table('user')->orderBy('id', DESC)
+- DB::table('user')->pluck('nama')  : mengambil coloum nama pada data user
+- DB::table('user')->max('price')  
+- DB::table('user')->count()
+- DB::table('user')->where('finalized', 1)->avg('price')
+- DB::table('user')->orderBy('id', DESC)
+
+Database: Migration
+- php artisan make:migration create_flights_table     : untuk membuat file migrasi
+- php artisan migrate   : untuk menjalankan semua file migrasi
+- php artisan migrate:status      : untuk melihat status migrasi
+- php artisan migrate:rollback    : untuk merollback tabel sebelum di lakukan migrasi
+- php artisan migrate:rollback --step=5     : untuk merollback lima terakhir migrasi
+
+Database: Migration - Available Coloumn Type
+- $table->bigIncrements('id')   : untuk membuat auto increments(primary key)
+- $table->increments('id')    : merupakan method alias dari bigIncrements untuk membuat kolom id
+- $table->char('nama', 100)   : untuk membuat tipe data char parameter keuda length optional, jika tidak di isi nilai 100
+- $table->varchar('nama', 100)   : untuk membuat tipe data varchar parameter keuda length optional, jika tidak di isi nilai 100
+- $table->text('description')  
+- $table->date('created_at')
+- $table->time('sunrise', $precision = 0)     : Metode time membuat kolom setara DATETIME dengan precision opsional (digit total):
+- $table->dateTime('created_at', $precision = 0)    : Metode dateTime membuat kolom setara DATETIME dengan precision opsional (digit total):
+
+Database: Migration - Column Modifiers
+Schema::table('users', function (Blueprint $table) {
+    $table->string('email')->nullable();
+});
+->after('column')   : tempat kolom setelah kolom lain di MySql
+->autoIncrement()   : set INT auto-increments
+->charset('utf8mb4')
+->default($value)   : membuat default untuk kolom
+->invisible()       : jadikan kolom "tidak terlihat" untuk kueri SELECT * (MySQL)
+->nullable($value = true)     : mengijinkan kolom untuk berisi null
+
+Database: Migration - Available Index Types
+- $table->primary('id')
+- $table->unique('email')
+
+Eloquent ORM (CRUD)
+Setelah melirik contoh di atas, Anda mungkin memperhatikan bahwa kami tidak memberi tahu Eloquent tabel database mana yang sesuai dengan model Flight kami. Dengan konvensi, "snake case", nama jamak kelas akan digunakan sebagai nama tabel kecuali nama lain secara eksplisit ditentukan. Jadi, dalam hal ini, Eloquent akan menganggap model Flight menyimpan catatan di tabel Flights, sedangkan model AirTrafficController akan menyimpan catatan di tabel air_traffic_controllers.
+- php artisan make:model Flight   : untuk membuat model
+- php artisan make:model Flight --migration   : untuk membuat model besera migration
+- php artisan make:model Flight --factory     : untuk membuat model beserta factory
+- php artisan make:model Flight --controller     : untuk membuat model beserta controller
+
+Eloquent ORM - Eloquent Model Conventions (aturan jika tidak menggunakan aturan default)
+<?php
+namespace App\Models;
+use Illuminate\Database\Eloquent\Model;
+class Flight extends Model
+{
+    protected $table = 'my_flights';            : Eloquent mengasumsikan bahwa nama tabel pada datbase merupakan bentuk jamak dari nama model, jika nama tabel bukan bentuk jamak dari model maka gunakan ini.
+
+    protected $primaryKey = 'flight_id';        : Eloquent mendefinisikan primary ke pada table jika primary ke pada tabel bukan id
+
+    public $incrementing = false;               : Eloquent mengasumsikan bahwa primary ke pada tabel ada sebuah increments(integer / numeric), jika primary ke bukan increments maka berikan "false"
+
+     protected $keyType = 'string';             : Jika primary ke pada tabel bukan increments(integer / numeric) maka definisikan bentuk
+
+    public $timestamps = false;
+
+    protected $dateFormat = 'U';
+
+    const CREATED_AT = 'creation_date';
+    const UPDATED_AT = 'updated_date';
+
+    protected $connection = 'sqlite';           : Eloquent secara default menggunakan connection yang di seting pada aplikasi di .env. Jika menginginkan koneksi yang berbeda maa bisa gunakan ini
+
+    protected $attributes = [
+        'delayed' => false,
+    ];
+}
+
+Method Colection
+$collection = collect([1,2,3,4,5]);
+- all()     : mengembalikan semua element dari Conllection
+- last()    : mengembalikan element terakhir dari Conllection
+- const()   : mengitung jumlah elment dari Conllection
+- avg()     : menhitung rata-rata dari Conllection
+- min()     : mengebalikan nilai minimal dari Conllection
+- sum()     : menambahkan semua element dari Conllection
+- splice()  : menghilangkan dan mengembalikan sepotong elment dari indec yang ditentukan
+- splic()   : membagi element ke dalam sebuah grup array
+- where()   
+- isEmpty()
+- isNotEmpty()
+- join()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

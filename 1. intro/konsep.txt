@@ -1,0 +1,28 @@
+Laravel?
+- Framework PHP open-source 
+- Terdapat konsep MVC
+- Pembuat Taylor Otwell
+
+Kenapa Laravel
+- Expressive & Beautiful Syntax (komponen, class, istilah-istilah)
+- Cocok Untuk Tim (komonen migrasi / membuat database dengan cara coding)
+- Modern Toolkit (terdapat composer dan github)
+
+"FILE ROUTING" 
+- routes/web.php
+Route::get('/', fucntion(){
+  return view('welcome');
+});
+- fungsi : * untuk memanggil controller
+           * untuk memanggil view
+           * mengirim data
+
+"FOLDER VIEWS" 
+- resource/views/welcome.blade.php
+
+"Layouts Using Template Inheritance"
+@extends('folder.name') ; untuk mendefinisikan tampilkan mana yang akan diwariskan ke tampian anak
+@section('name') : untuk mendefinisikan bagian kontent
+@section('name', 'value') : untuk mendefinisikan bagian kontent, yang mana parameter kedua dapat dijadikan sebuah value yang dapat digunakan
+@yield('name') : untuk menampilkan kontent dari sebuah section
+$yield('name', 'value') : yield directive juga menerima sebuah default value sebagai parameter. Default value akan digunakan ketika sebuah yield undefined
